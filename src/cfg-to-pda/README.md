@@ -5,8 +5,8 @@ Converts a Context-Free Grammar into an equivalent Pushdown Automaton.
 ## How to Run
 
 ```bash
-javac Main.java
-java Main
+javac ProgtamOne.java
+java ProgramOne
 ```
 
 ## Description
