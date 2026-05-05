@@ -9,26 +9,6 @@ import java.awt.event.*;
 import java.util.*;
 import java.util.List;
 
-/**
- * PDA Simulator for L = { a^n b^n | n >= 0 }
- * CSE432 - Automata and Computability, Spring 2026
- * Ain Shams University
- *
- * PDA Definition (4-state):
- *   States     : q0 (start, ACCEPT), q1 (push a's), q2 (pop b's), q3 (ACCEPT)
- *   Input Σ    : {a, b}
- *   Stack Γ    : {A, Z}   where Z = bottom-of-stack marker
- *   Start state: q0
- *   Accept states: q0 (empty string), q3 (balanced string)
- *
- * Transition function δ:
- *   (q0, ε, Z)  → (q3, Z)    empty string → accept
- *   (q0, a, Z)  → (q1, AZ)   first a: push A, go to q1
- *   (q1, a, A)  → (q1, AA)   more a's: push A (self-loop)
- *   (q1, b, A)  → (q2, ε)    first b: pop A, go to q2
- *   (q2, b, A)  → (q2, ε)    more b's: pop A (self-loop)
- *   (q2, ε, Z)  → (q3, Z)    stack empty → accept
- */
 public class Main extends JFrame {
 
     // ── colour palette ──────────────────────────────────────────────────────
@@ -43,7 +23,7 @@ public class Main extends JFrame {
     private static final Color TAPE_ACTIVE = new Color(219, 234, 254);
     private static final Color TAPE_DONE   = new Color(241, 245, 249);
 
-    // ── PDA internals ───────────────────────────────────────────────────────
+    // ── PDA internals ───────────-───────────────────────────────────────────
     private String   inputString = "";
     private int      head        = 0;
     private Deque<Character> stack = new ArrayDeque<>();
@@ -191,11 +171,6 @@ public class Main extends JFrame {
 
     /**
      * Draws 4 states in a horizontal line:
-     *
-     *  start → ((q0)) --a,Z/AZ--> (q1) --b,A/ε--> (q2) --ε,Z/Z--> ((q3))
-     *                               ↺ a,A/AA         ↺ b,A/ε
-     *
-     * q0 and q3 have double circles (accept states).
      */
     private void drawStateDiagram(Graphics2D g) {
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
