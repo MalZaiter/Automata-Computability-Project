@@ -7,7 +7,7 @@ import java.awt.event.*;
 import java.util.*;
 import java.util.List;
 
-public class ProgramThree extends JFrame {
+public class ProgramThree extends JPanel implements ProgramScreen {
 
     // ── colour palette ──────────────────────────────────────────────────────
     private static final Color BG          = new Color(245, 245, 248);
@@ -42,17 +42,29 @@ public class ProgramThree extends JFrame {
 
     // ── constructor ─────────────────────────────────────────────────────────
     public ProgramThree() {
-        super("PDA Simulator  —  L = { aⁿbⁿ | n ≥ 0 }");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(950, 720);
-        setMinimumSize(new Dimension(800, 600));
-        setLocationRelativeTo(null);
-        getContentPane().setBackground(BG);
-        setLayout(new BorderLayout(10, 10));
+    setBackground(BG);
+    setPreferredSize(new Dimension(950, 720));
+    setLayout(new BorderLayout(10, 10));
 
-        buildUI();
-        resetPDA();
-        setVisible(true);
+    buildUI();
+    resetPDA();
+    }
+
+    @Override
+    public String getProgramName() {
+        return "PDA Simulator — aⁿbⁿ";
+    }
+
+    @Override
+    public void onHide() {
+        if (autoTimer != null) {
+            autoTimer.stop();
+            autoTimer = null;
+        }
+
+        if (autoBtn != null) {
+            autoBtn.setText("▶▶ Auto");
+        }
     }
 
     // ════════════════════════════════════════════════════════════════════════
@@ -702,8 +714,18 @@ public class ProgramThree extends JFrame {
     //  MAIN
     // ════════════════════════════════════════════════════════════════════════
     public static void main(String[] args) {
-        try { UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName()); }
-        catch (Exception ignored) {}
-        SwingUtilities.invokeLater(ProgramThree::new);
+    try {
+        UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+    } catch (Exception ignored) {}
+
+    SwingUtilities.invokeLater(() -> {
+        JFrame frame = new JFrame("PDA Simulator — L = { aⁿbⁿ | n ≥ 0 }");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setContentPane(new ProgramThree());
+        frame.setSize(950, 720);
+        frame.setMinimumSize(new Dimension(800, 600));
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
+    });
     }
 }

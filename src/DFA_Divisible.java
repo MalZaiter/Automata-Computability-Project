@@ -7,7 +7,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.Path2D;
 
-public class DFA_Divisible extends JFrame {
+public class DFA_Divisible extends JPanel implements ProgramScreen {
 
     // ================= DFA LOGIC =================
     enum State {
@@ -130,41 +130,46 @@ public class DFA_Divisible extends JFrame {
     private int animIndex = 0;
     private String lastInput = null;
 
-    public DFA_Divisible() {
-        setTitle("DFA Simulator \u2014 #1s \u2261 0 (mod 3) AND ends with 0");
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setSize(1200, 820);
-        setMinimumSize(new Dimension(1050, 600));
-        setLocationRelativeTo(null);
-        getContentPane().setBackground(new Color(245, 245, 248));
-        setLayout(new BorderLayout(0, 0));
+   public DFA_Divisible() {
+    setBackground(new Color(245, 245, 248));
+    setPreferredSize(new Dimension(1200, 820));
+    setLayout(new BorderLayout(0, 0));
 
-        // The header and bottom button bar stay fixed; the middle area scrolls
-        // vertically so the transition log is reachable on shorter windows.
-        add(buildHeader(), BorderLayout.NORTH);
+    add(buildHeader(), BorderLayout.NORTH);
 
-        JScrollPane centerScroll = new JScrollPane(buildCenter(),
-                JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
-                JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        centerScroll.setBorder(BorderFactory.createEmptyBorder());
-        centerScroll.getViewport().setBackground(new Color(245, 245, 248));
-        centerScroll.getVerticalScrollBar().setUnitIncrement(20);
-        add(centerScroll, BorderLayout.CENTER);
+    JScrollPane centerScroll = new JScrollPane(buildCenter(),
+            JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+            JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
-        add(buildBottomPanel(), BorderLayout.SOUTH);
+    centerScroll.setBorder(BorderFactory.createEmptyBorder());
+    centerScroll.getViewport().setBackground(new Color(245, 245, 248));
+    centerScroll.getVerticalScrollBar().setUnitIncrement(20);
 
-        // Single Timer; speed slider drives its delay anytime.
-        animationTimer = new javax.swing.Timer(speedSlider.getValue(), e -> {
-            if (animIndex < animPath.size()) {
-                advanceOneStep();
-            } else {
-                animationTimer.stop();
-            }
-        });
+    add(centerScroll, BorderLayout.CENTER);
+    add(buildBottomPanel(), BorderLayout.SOUTH);
 
-        resetAnimation();
-        setVisible(true);
+    animationTimer = new javax.swing.Timer(speedSlider.getValue(), e -> {
+        if (animIndex < animPath.size()) {
+            advanceOneStep();
+        } else {
+            animationTimer.stop();
+        }
+    });
+
+    resetAnimation();
+}
+
+@Override
+public String getProgramName() {
+    return "DFA Divisible Simulator";
+}
+
+@Override
+public void onHide() {
+    if (animationTimer != null && animationTimer.isRunning()) {
+        animationTimer.stop();
     }
+}
 
     private JPanel buildHeader() {
         JPanel header = new JPanel(new BorderLayout());
@@ -876,8 +881,15 @@ public class DFA_Divisible extends JFrame {
         g2.drawString(label, cx - fm.stringWidth(label) / 2, apexY);
     }
 
-    // ================= MAIN =================
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(DFA_Divisible::new);
+   public static void main(String[] args) {
+    SwingUtilities.invokeLater(() -> {
+        JFrame frame = new JFrame("DFA Simulator — #1s ≡ 0 (mod 3) AND ends with 0");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setContentPane(new DFA_Divisible());
+        frame.setSize(1200, 820);
+        frame.setMinimumSize(new Dimension(1050, 600));
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
+    });
     }
 }

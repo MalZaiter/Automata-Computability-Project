@@ -37,7 +37,7 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.TreeSet;
 
-public class ProgramOne extends JFrame {
+public class ProgramOne extends JPanel implements ProgramScreen {
 
     private static final Color COLOR_BG         = new Color(245, 247, 251);
     private static final Color COLOR_HEADER_TOP = new Color(28,  57, 110);
@@ -65,36 +65,40 @@ public class ProgramOne extends JFrame {
     private List<Production> currentProductions = new ArrayList<>();
     private String           currentStartSymbol = "";
 
-    public ProgramOne() {
-        try {
-            for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels())
-                if ("Nimbus".equals(info.getName())) { UIManager.setLookAndFeel(info.getClassName()); break; }
-        } catch (Exception ignored) {}
+   public ProgramOne() {
+    try {
+        for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+            if ("Nimbus".equals(info.getName())) {
+                UIManager.setLookAndFeel(info.getClassName());
+                break;
+            }
+        }
+    } catch (Exception ignored) {}
 
-        setTitle("CFG → PDA Converter");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLayout(new BorderLayout());
-        getContentPane().setBackground(COLOR_BG);
+    setLayout(new BorderLayout());
+    setBackground(COLOR_BG);
+    setPreferredSize(new Dimension(980, 740));
 
-        grammarArea.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 14));
-        grammarArea.setForeground(COLOR_TEXT_MONO);
-        grammarArea.setLineWrap(false);
-        grammarArea.setText("S -> a S b | ε");
+    grammarArea.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 14));
+    grammarArea.setForeground(COLOR_TEXT_MONO);
+    grammarArea.setLineWrap(false);
+    grammarArea.setText("S -> a S b | ε");
 
-        outputArea.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 13));
-        outputArea.setForeground(COLOR_TEXT_MONO);
-        outputArea.setEditable(false);
-        outputArea.setBackground(new Color(250, 251, 255));
+    outputArea.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 13));
+    outputArea.setForeground(COLOR_TEXT_MONO);
+    outputArea.setEditable(false);
+    outputArea.setBackground(new Color(250, 251, 255));
 
-        add(buildHeaderPanel(), BorderLayout.NORTH);
-        add(buildMainPanel(),   BorderLayout.CENTER);
+    add(buildHeaderPanel(), BorderLayout.NORTH);
+    add(buildMainPanel(), BorderLayout.CENTER);
 
-        pack();
-        setMinimumSize(new Dimension(980, 740));
-        setLocationRelativeTo(null);
-        // Set initial split after the frame has been laid out
-        mainSplit.setDividerLocation(0.42);
-    }
+    SwingUtilities.invokeLater(() -> mainSplit.setDividerLocation(0.42));
+}
+
+@Override
+public String getProgramName() {
+    return "CFG → PDA Converter";
+}
 
     // ── Header ────────────────────────────────────────────────────────────────
 
@@ -872,7 +876,15 @@ public class ProgramOne extends JFrame {
         }
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new ProgramOne().setVisible(true));
+   public static void main(String[] args) {
+    SwingUtilities.invokeLater(() -> {
+        JFrame frame = new JFrame("CFG → PDA Converter");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setContentPane(new ProgramOne());
+        frame.setSize(980, 740);
+        frame.setMinimumSize(new Dimension(980, 740));
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
+    });
     }
 }
