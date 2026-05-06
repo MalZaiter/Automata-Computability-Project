@@ -1,5 +1,3 @@
-package org.example;
-
 import javax.swing.*;
 import javax.swing.Timer;
 import javax.swing.border.*;
@@ -9,7 +7,7 @@ import java.awt.event.*;
 import java.util.*;
 import java.util.List;
 
-public class Main extends JFrame {
+public class ProgramThree extends JFrame {
 
     // ── colour palette ──────────────────────────────────────────────────────
     private static final Color BG          = new Color(245, 245, 248);
@@ -43,7 +41,7 @@ public class Main extends JFrame {
     private int        stepCount = 0;
 
     // ── constructor ─────────────────────────────────────────────────────────
-    public Main() {
+    public ProgramThree() {
         super("PDA Simulator  —  L = { aⁿbⁿ | n ≥ 0 }");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(950, 720);
@@ -706,6 +704,6 @@ public class Main extends JFrame {
     public static void main(String[] args) {
         try { UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName()); }
         catch (Exception ignored) {}
-        SwingUtilities.invokeLater(Main::new);
+        SwingUtilities.invokeLater(ProgramThree::new);
     }
 }

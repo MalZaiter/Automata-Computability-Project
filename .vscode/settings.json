@@ -1,0 +1,7 @@
+{
+    "java.project.sourcePaths": [
+        "src/dfa-divisible-by-3",
+        "src/cfg-to-pda",
+        "src/pda-anbn"
+    ]
+}
