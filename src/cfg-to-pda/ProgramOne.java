@@ -351,15 +351,62 @@ public class ProgramOne extends JFrame {
     }
 
     List<String> tokenizeRhs(String rhs, Set<String> nts) {
-        List<String> s = new ArrayList<>(); if (isEpsilon(rhs)) return s;
-        if (rhs.contains(" ")) { for (String p : rhs.trim().split("\\s+")) if(!p.isBlank()) s.add(p.trim()); return s; }
+        List<String> s = new ArrayList<>();
+
+        if (isEpsilon(rhs))
+            return s;
+
+        // If spaces exist → use space-separated tokens
+        if (rhs.contains(" ")) {
+            for (String p : rhs.trim().split("\\s+")) {
+                if (!p.isBlank())
+                    s.add(p.trim());
+            }
+            return s;
+        }
+
+        // Match longest non-terminal first
         List<String> sorted = new ArrayList<>(nts);
         sorted.sort((a, b) -> Integer.compare(b.length(), a.length()));
+
         int idx = 0;
+
         while (idx < rhs.length()) {
-            String m = null; for (String nt : sorted) if (rhs.startsWith(nt,idx)) { m=nt; break; }
-            if (m!=null) { s.add(m); idx+=m.length(); } else { s.add(String.valueOf(rhs.charAt(idx++))); }
+
+            // Try matching non-terminals
+            String matched = null;
+
+            for (String nt : sorted) {
+                if (rhs.startsWith(nt, idx)) {
+                    matched = nt;
+                    break;
+                }
+            }
+
+            if (matched != null) {
+                s.add(matched);
+                idx += matched.length();
+                continue;
+            }
+
+            // Multi-letter terminals
+            if (Character.isLetter(rhs.charAt(idx))) {
+                StringBuilder term = new StringBuilder();
+
+                while (idx < rhs.length()
+                        && Character.isLetterOrDigit(rhs.charAt(idx))) {
+                    term.append(rhs.charAt(idx));
+                    idx++;
+                }
+
+                s.add(term.toString());
+            } else {
+                // Single-char operators/symbols
+                s.add(String.valueOf(rhs.charAt(idx)));
+                idx++;
+            }
         }
+
         return s;
     }
 
